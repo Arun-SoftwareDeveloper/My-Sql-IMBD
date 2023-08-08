@@ -1,0 +1,102 @@
+CREATE TABLE Users (
+  user_id INT PRIMARY KEY AUTO_INCREMENT,
+  username VARCHAR(50) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  password VARCHAR(100) NOT NULL,
+  registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  last_login TIMESTAMP
+);
+
+CREATE TABLE Genres (
+  genre_id INT PRIMARY KEY AUTO_INCREMENT,
+  genre_name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Directors (
+  director_id INT PRIMARY KEY AUTO_INCREMENT,
+  full_name VARCHAR(100) NOT NULL,
+  birth_date DATE,
+  nationality VARCHAR(50)
+);
+
+CREATE TABLE Movies (
+  movie_id INT PRIMARY KEY AUTO_INCREMENT,
+  title VARCHAR(100) NOT NULL,
+  release_date DATE,
+  duration INT,
+  director_id INT,
+  genre_id INT,
+  plot TEXT,
+  average_rating DECIMAL(3, 2),
+  FOREIGN KEY (director_id) REFERENCES Directors(director_id),
+  FOREIGN KEY (genre_id) REFERENCES Genres(genre_id)
+);
+
+CREATE TABLE Actors (
+  actor_id INT PRIMARY KEY AUTO_INCREMENT,
+  full_name VARCHAR(100) NOT NULL,
+  birth_date DATE,
+  nationality VARCHAR(50)
+);
+
+CREATE TABLE Cast (
+  cast_id INT PRIMARY KEY AUTO_INCREMENT,
+  movie_id INT,
+  actor_id INT,
+  role VARCHAR(50),
+  FOREIGN KEY (movie_id) REFERENCES Movies(movie_id),
+  FOREIGN KEY (actor_id) REFERENCES Actors(actor_id)
+);
+
+CREATE TABLE Reviews (
+  review_id INT PRIMARY KEY AUTO_INCREMENT,
+  movie_id INT,
+  user_id INT,
+  rating DECIMAL(2, 1),
+  review_text TEXT,
+  review_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (movie_id) REFERENCES Movies(movie_id),
+  FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
+
+///values assigning....
+
+-- Insert example genres
+INSERT INTO Genres (genre_name) VALUES
+  ('Action'),
+  ('Drama'),
+  ('Comedy'),
+  ('Adventure'),
+  ('Science Fiction');
+
+-- Insert example directors
+INSERT INTO Directors (full_name, birth_date, nationality) VALUES
+  ('Christopher Nolan', '1970-07-30', 'British'),
+  ('Quentin Tarantino', '1963-03-27', 'American');
+
+-- Insert example actors
+INSERT INTO Actors (full_name, birth_date, nationality) VALUES
+  ('Leonardo DiCaprio', '1974-11-11', 'American'),
+  ('Brad Pitt', '1963-12-18', 'American');
+
+-- Insert example movies
+INSERT INTO Movies (title, release_date, duration, director_id, genre_id, plot, average_rating) VALUES
+  ('Inception', '2010-07-16', 148, 1, 1, 'A thief enters the dreams of others to steal their secrets.', 8.8),
+  ('Once Upon a Time in Hollywood', '2019-07-26', 161, 2, 2, 'A fading actor and his stunt double strive for success in the film industry.', 7.6);
+
+-- Insert example cast
+INSERT INTO Cast (movie_id, actor_id, role) VALUES
+  (1, 1, 'Cobb'),
+  (2, 2, 'Cliff Booth');
+
+-- Insert example users
+INSERT INTO Users (username, email, password) VALUES
+  ('user1', 'user1@example.com', 'password1'),
+  ('user2', 'user2@example.com', 'password2');
+
+-- Insert example reviews
+INSERT INTO Reviews (movie_id, user_id, rating, review_text) VALUES
+  (1, 1, 9.0, 'One of the best movies I have ever seen!'),
+  (1, 2, 8.5, 'Mind-bending storyline and excellent visuals.'),
+  (2, 1, 8.0, 'Great performances by the cast.');
